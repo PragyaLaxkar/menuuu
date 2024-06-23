@@ -1,0 +1,159 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatic Image Capture and Upload</title>
+    <style>
+        #container {
+            display: flex;
+        }
+        #video {
+            margin-right: 20px;
+        }
+        #capturedImage {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Automatic Image Capture and Upload</h1>
+    <div id="container">
+        <video id="video" width="640" height="480" autoplay></video>
+        <img id="capturedImage" width="640" height="480" alt="Captured Image">
+    </div>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <button id="captureButton">Capture Photo</button>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('captureButton');
+        const capturedImage = document.getElementById('capturedImage');
+        
+        // Access the webcam and stream the video to the video element
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
+            })
+            .catch((error) => {
+                console.error('Error accessing webcam:', error);
+            });
+
+        captureButton.addEventListener('click', () => {
+            // Set the canvas size to the video size
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            // Draw the current video frame onto the canvas
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            // Convert the canvas content to a blob and show the captured image
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                capturedImage.src = url;
+
+                const formData = new FormData();
+                // Append the blob to the form data
+                formData.append('image', blob, `image_${Date.now()}.png`);
+                // Send the form data to the server using fetch
+                fetch('https://13.201.83.158/cgi-bin/livecamera.py', { method: 'POST', body: formData })
+                    .then(response => response.text())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error uploading image:', error));
+            });
+        });
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Capture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #202124;
+            color: #E8EAED;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4285F4;
+            margin-bottom: 20px;
+        }
+
+        #captureBtn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #E8EAED;
+            background-color: #4285F4;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #captureBtn:hover {
+            background-color: #357AE8;
+        }
+
+        #imageContainer {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Camera Capture</h1>
+    <video id="videoElement" autoplay></video>
+    <br>
+    <button id="captureBtn" onclick="captureImage()">Capture Image</button>
+    <div id="imageContainer"></div>
+
+    <script>
+        // Initialize variables for video stream and canvas context
+        let videoElement = document.getElementById('videoElement');
+        let canvasElement = document.createElement('canvas');
+        let canvasContext = canvasElement.getContext('2d');
+
+        // Function to initialize camera stream
+        function initializeCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    videoElement.srcObject = stream;
+                })
+                .catch(function (error) {
+                    console.error('Error accessing camera: ', error);
+                });
+        }
+
+        // Function to capture image
+        function captureImage() {
+            canvasElement.width = videoElement.videoWidth;
+            canvasElement.height = videoElement.videoHeight;
+
+            canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+
+            let imageURL = canvasElement.toDataURL('image/png');
+            displayImage(imageURL);
+        }
+
+        // Function to display captured image
+        function displayImage(imageURL) {
+            let imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = `<img src="${imageURL}" alt="Captured Image" style="max-width: 100%;">`;
+        }
+
+        // Call initializeCamera() when the page loads
+        initializeCamera();
+    </script>
+</body>
+</html>

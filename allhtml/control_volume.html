@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volume Control</title>
+</head>
+<body>
+    <h1>Set Volume Level</h1>
+    <input type="range" id="volumeSlider" min="0" max="100" value="50">
+    <span id="volumeValue">50</span>%
+    <button onclick="setVolume()">Set Volume</button>
+
+    <script>
+        document.getElementById('volumeSlider').oninput = function() {
+            document.getElementById('volumeValue').innerText = this.value;
+        };
+
+        function setVolume() {
+            var volumeLevel = document.getElementById('volumeSlider').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/cgi-bin/control_volume.py", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert("Volume set to " + volumeLevel + "%");
+                }
+            };
+            xhr.send("volume=" + volumeLevel);
+        }
+    </script>
+</body>
+</html>

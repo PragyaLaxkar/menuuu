@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 3rem;
+            text-align: center;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        button {
+            padding: 12px 24px;
+            margin: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to Main Page</h1>
+
+    <button onclick="goToGoogleSearch()">Go to Google Search</button>
+    <button onclick="sendmail()">Send Email</button>
+    <button onclick="currentCoordinates()">Geo Coordinates</button>
+    <button onclick="runcommand()">Run Linux Command</button>
+    <button onclick="sendsms()">Send SMS</button>
+    <button onclick="automateDocker()">Automate Docker</button>
+    <button onclick="launchInstance()">Launch Instance</button>
+    <button onclick="clickPhoto()">Click Photo</button>
+
+    <script>
+        function goToGoogleSearch() {
+            window.location.href = "searchgoogle.html";
+        }
+
+        function sendmail() {
+            window.location.href = "sendmail.html";
+        }
+
+        function currentCoordinates() {
+            window.location.href = "currentcoordinates.html";
+        }
+
+        function runcommand() {
+            window.location.href = "runcommand.html";
+        }
+
+        function sendsms() {
+            window.location.href = "sendsms.html";
+        }
+
+        function automateDocker() {
+            window.location.href = "docker.html";
+        }
+
+        function launchInstance() {
+            window.location.href = "launch_instance.html";
+        }
+
+        function clickPhoto() {
+            window.location.href = "https://15.206.185.34/livecamera.html";
+        }
+    </script>
+</body>
+
+</html>

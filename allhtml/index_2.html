@@ -1,0 +1,233 @@
+<!-- <form action="http://13.200.242.204/cgi-bin/demo.py">
+    Enter your command: <input name="c">
+    <input type="submit">
+</form> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .form-container, .result-container {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            margin: 10px;
+        }
+
+        .form-container {
+            width: 60%;
+        }
+
+        .result-container {
+            width: 30%;
+        }
+
+        button, input[type="email"], input[type="text"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        label {
+            margin-bottom: 5px;
+            display: block;
+            font-weight: bold;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        #d1 {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e9e9e9;
+            border-radius: 4px;
+        }
+    </style>
+
+</head>
+
+<body>
+   
+    <div class="container">
+        <h1 style="text-align: center; width: 100%;">Menu Project</h1>
+        <div class="main-content">
+            <div class="form-container">
+                <button onclick="sendWhatsapp()">Send WhatsApp</button>
+                <form onsubmit="event.preventDefault(); sendmail();">
+                    <label for="rid">Enter receiver's mail id:</label>
+                    <input type="email" id="rid" name="rid" required>
+                    <label for="subject">Enter your subject:</label>
+                    <input type="text" id="subject" name="subject">
+                    <label for="body">Enter your body:</label>
+                    <input type="text" id="body" name="body">
+                    <button type="submit">Send Mail</button>
+                </form>
+                <button onclick="sendsms()">Send SMS</button>
+                <!-- <button onclick="searchgoogle()">Search on Google</button> -->
+                <form onsubmit="event.preventDefault(); searchgoogle();">
+                    <label for="sid">Search here:</label>
+                    <input type="text" id="sid"  required>
+                    <button type="submit">Search</button>
+                </form>
+                <button onclick="currentcoordinates()">Current Coordinates</button>
+                <form onsubmit="event.preventDefault(); runcommand();">
+                    <label for="cmd">Command:</label>
+                    <input type="text" id="cmd" name="cmd" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="result-container" id="d1">
+                Data ....
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    function sendWhatsapp() {
+        let myurl = "http://13.201.83.158/cgi-bin/sendwhatsapp.py"
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                let x = document.getElementById("d1")
+                x.innerHTML = xhr.responseText;
+            }
+        }
+        xhr.open("GET", myurl, true)
+        xhr.send()
+    }
+
+    function sendmail() {
+        let rec_mail = document.getElementById("rid").value;
+        let subject = document.getElementById("subject").value;
+        let body = document.getElementById("body").value;
+        let myurl = 'http://13.201.83.158/cgi-bin/sendmail.py?rec_mail=' + encodeURIComponent(rec_mail) + '&subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                let x = document.getElementById("d1")
+                x.innerHTML = xhr.responseText;
+            }
+        }
+        xhr.open("GET", myurl, true)
+        xhr.send()
+    }
+
+    function sendsms() {
+        let myurl = "http://13.201.83.158/cgi-bin/sendsms.py"
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                let x = document.getElementById("d1")
+                x.innerHTML = xhr.responseText;
+            }
+        }
+        xhr.open("GET", myurl, true)
+        xhr.send()
+    }
+
+    
+        document.getElementById("searchBtn").addEventListener("click", function() {
+            var query = document.getElementById("searchQuery").value.trim();
+            if (query !== "") {
+                fetch('/cgi-bin/googlesearch.py?query=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+
+        function displayResults(results) {
+            var resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+            if (results) {
+                results.forEach(function(result, index) {
+                    var resultDiv = document.createElement("div");
+                    resultDiv.innerHTML = `
+                        <h3>Result ${index + 1}:</h3>
+                        <p>Title: ${result.title}</p>
+                        <p>Link: <a href="${result.link}" target="_blank">${result.link}</a></p>
+                        <p>Snippet: ${result.snippet}</p>
+                    `;
+                    resultsDiv.appendChild(resultDiv);
+                });
+            } else {
+                resultsDiv.textContent = "Failed to retrieve search results.";
+            }
+        }
+    
+
+    function currentcoordinates() {
+        let myurl = "http://13.201.83.158/cgi-bin/currentcoordinates.py"
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                let x = document.getElementById("d1")
+                x.innerHTML = xhr.responseText;
+            }
+        }
+        xhr.open("GET", myurl, true)
+        xhr.send()
+    }
+
+    function runcommand() {
+        let cmd = document.getElementById('cmd').value;
+        let xhr = new XMLHttpRequest();
+        let url = 'http://13.201.83.158/cgi-bin/runcommand.py?cmd=' + encodeURIComponent(cmd);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                document.getElementById('d1').innerHTML = xhr.responseText;
+            }
+        };
+        xhr.open('GET', url, true);
+        xhr.send();
+    }
+
+</script>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Search</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #202124;
+            color: #E8EAED;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #4285F4;
+            animation: fadeInUp 1s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #searchContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: slideInUp 1s ease both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #searchQuery {
+            width: 300px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #5f6368;
+            border-radius: 4px;
+            background-color: #303134;
+            color: #E8EAED;
+            transition: all 0.3s ease;
+        }
+
+        #searchQuery:focus {
+            border-color: #4285F4;
+            box-shadow: 0 0 5px rgba(66, 133, 244, 0.5);
+        }
+
+        #searchBtn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #000000;
+            background-color: #4285F4;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #searchBtn:hover {
+            background-color: #6ba0f5dd;
+        }
+
+        #results {
+            margin-top: 20px;
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s ease both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result {
+            background: #303134;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .result:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .result p {
+            margin: 5px 0;
+            font-size: 1rem;
+            color: #E8EAED;
+        }
+
+        .result a {
+            color: #8AB4F8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .result a:hover {
+            color: #6ba0f5dd;
+        }
+
+        @media (max-width: 600px) {
+            #searchQuery {
+                width: 100%;
+            }
+
+            #results {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="searchContainer">
+        <h2>Google Search</h2>
+        <input type="text" id="searchQuery" placeholder="Enter your search query">
+        <button id="searchBtn">Search</button>
+    </div>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById("searchBtn").addEventListener("click", function() {
+            var query = document.getElementById("searchQuery").value.trim();
+            if (query !== "") {
+                fetch('/cgi-bin/searchgoogle.py?query=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+
+        function displayResults(results) {
+            var resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+            if (results) {
+                results.forEach(function(result, index) {
+                    var resultDiv = document.createElement("div");
+                    resultDiv.classList.add("result");
+                    resultDiv.innerHTML = `
+                        <p>Title: ${result.title}</p>
+                        <p>Link: <a href="${result.link}" target="_blank">${result.link}</a></p>
+                        <p>Snippet: ${result.snippet}</p>
+                    `;
+                    resultsDiv.appendChild(resultDiv);
+                    resultDiv.style.opacity = '0';
+                    resultDiv.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        resultDiv.style.opacity = '1';
+                        resultDiv.style.transform = 'translateY(0)';
+                    }, 100 * index); // Delay each result animation
+                });
+            } else {
+                resultsDiv.textContent = "Failed to retrieve search results.";
+            }
+        }
+    </script>
+</body>
+</html>

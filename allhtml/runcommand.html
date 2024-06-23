@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Terminal</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #2f3136;
+            color: #cfcfcf;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        form {
+            background-color: #292b2f;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            animation: slideInUp 1s ease-in-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        label {
+            margin-bottom: 12px;
+            color: #9cdcfe;
+            font-size: 1.2rem;
+        }
+
+        input[type="text"] {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 2px solid #373c43;
+            border-radius: 6px;
+            background-color: #373c43;
+            color: #cfcfcf;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: #cfcfcf;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #66bb6a;
+        }
+
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #292b2f;
+            border-radius: 8px;
+            color: #cfcfcf;
+            font-size: 1.2rem;
+            transition: opacity 0.3s ease;
+            width: 100%;
+            max-width: 800px;
+            overflow: auto;
+            max-height: 70vh;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            form {
+                padding: 20px;
+            }
+
+            input[type="text"],
+            button {
+                font-size: 1rem;
+            }
+
+            label {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Linux Terminal</h1>
+    <form onsubmit="event.preventDefault(); runcommand();">
+        <label for="cmd">Command:</label>
+        <input type="text" id="cmd" name="cmd" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div class="result-container" id="d1">
+        <!-- Result will be displayed here -->
+    </div>
+    <script>
+        function runcommand() {
+            let cmd = document.getElementById('cmd').value;
+            let xhr = new XMLHttpRequest();
+            let url = 'http://15.206.185.34/cgi-bin/runcommand.py?cmd=' + encodeURIComponent(cmd);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    document.getElementById('d1').innerHTML = xhr.responseText;
+                    document.getElementById('d1').style.opacity = '1'; // Show result container
+                }
+            };
+            xhr.open('GET', url, true);
+            xhr.send();
+        }
+    </script>
+</body>
+
+</html>

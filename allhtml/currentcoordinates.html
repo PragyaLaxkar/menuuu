@@ -1,0 +1,193 @@
+<!-- <script>
+    function currentcoordinates() {
+        let myurl = "http://13.201.83.158/cgi-bin/currentcoordinates.py"
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                let x = document.getElementById("d1")
+                x.innerHTML = xhr.responseText;
+            }
+        }
+        xhr.open("GET", myurl, true)
+        xhr.send()
+    }
+</script>
+<button onclick="currentcoordinates()">Current Coordinates</button>
+<div class="result-container" id="d1">
+    Data ....
+</div> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Coordinates</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #202124;
+            color: #E8EAED;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3rem; /* Increased font size */
+            margin-bottom: 30px; /* Increased margin */
+            color: #4285F4;
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        form {
+            background-color: #303134;
+            padding: 30px; /* Increased padding */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px; /* Increased max-width */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: slideInLeft 0.8s ease both;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        label {
+            margin-bottom: 12px; /* Increased margin */
+            font-size: 1.4rem; /* Increased font size */
+            color: #8AB4F8;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 14px; /* Increased padding */
+            font-size: 1.2rem; /* Increased font size */
+            border: 2px solid #5f6368;
+            border-radius: 6px; /* Increased border-radius */
+            background-color: #404245;
+            color: #E8EAED;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4285F4;
+            box-shadow: 0 0 8px rgba(66, 133, 244, 0.5);
+            outline: none;
+        }
+
+        button {
+            margin-top: 20px; /* Increased margin */
+            padding: 14px 24px; /* Increased padding */
+            font-size: 1.2rem; /* Increased font size */
+            color: #E8EAED;
+            background-color: #4285F4;
+            border: none;
+            border-radius: 6px; /* Increased border-radius */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #357AE8;
+        }
+
+        #result {
+            margin-top: 30px; /* Increased margin */
+            width: 100%;
+            max-width: 600px; /* Increased max-width */
+            background-color: #303134;
+            padding: 30px; /* Increased padding */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: slideInRight 0.8s ease both;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        #result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 1.2rem; /* Increased font size */
+            color: #E8EAED;
+        }
+
+        @media (max-width: 600px) {
+            input[type="text"] {
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Get Coordinates</h1>
+    <form action="/cgi-bin/currentcoordinates.py" method="get">
+        <label for="location">Enter location:</label>
+        <input type="text" id="location" name="location" placeholder="E.g., New York City">
+        <button type="submit">Get Coordinates</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var location = document.getElementById('location').value;
+            fetch('/cgi-bin/currentcoordinates.py?location=' + encodeURIComponent(location))
+                .then(response => response.json())
+                .then(data => {
+                    var resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = `
+                        <h2>Coordinates for ${data.location}</h2>
+                        <pre>Latitude: ${data.latitude}\nLongitude: ${data.longitude}</pre>
+                    `;
+                })
+                .catch(error => {
+                    var resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = `<p>Failed to retrieve coordinates. Please try again later.</p>`;
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
